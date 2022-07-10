@@ -15,3 +15,8 @@
 /build/*
 /yarn-error.log
 /var
+
+.vscode
+.history
+
+LICENSE
