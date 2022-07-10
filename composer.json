@@ -1,6 +1,13 @@
 {
+    "name": "perseus-uy/workspace",
+    "description": "CI/CD tool that unifies and simplifies the development of software projects.",
     "type": "project",
-    "license": "proprietary",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Perseus UY Team"
+        }
+    ],
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
