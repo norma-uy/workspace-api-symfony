@@ -65,6 +65,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     ]
     private $github_user;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $github_pa_token;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $github_username;
+
+    #[ORM\Column(type: 'string', length: 15, nullable: true)]
+    private $github_usertype;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -219,6 +228,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setGithubUser(?GithubUser $github_user): self
     {
         $this->github_user = $github_user;
+
+        return $this;
+    }
+
+    public function getGithubPaToken(): ?string
+    {
+        return $this->github_pa_token;
+    }
+
+    public function setGithubPaToken(?string $github_pa_token): self
+    {
+        $this->github_pa_token = $github_pa_token;
+
+        return $this;
+    }
+
+    public function getGithubUsername(): ?string
+    {
+        return $this->github_username;
+    }
+
+    public function setGithubUsername(?string $github_username): self
+    {
+        $this->github_username = $github_username;
+
+        return $this;
+    }
+
+    public function getGithubUsertype(): ?string
+    {
+        return $this->github_usertype;
+    }
+
+    public function setGithubUsertype(?string $github_usertype): self
+    {
+        $this->github_usertype = $github_usertype;
 
         return $this;
     }

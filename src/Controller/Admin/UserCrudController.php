@@ -2,19 +2,25 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Github\GithubUser;
 use App\Entity\User;
+use App\Repository\GithubUserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\BooleanFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\TextFilter;
+use GuzzleHttp\Client;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -57,6 +63,23 @@ class UserCrudController extends AbstractCrudController
             TextField::new('name', 'Nombre'),
             EmailField::new('email', 'E-mail'),
             TextField::new('plainPassword', 'Contraseña')->onlyOnForms(),
+            ArrayField::new('roles', 'Roles'),
+            TextField::new(
+                'github_username',
+                'Github - Username',
+            )->onlyWhenUpdating(),
+            TextField::new(
+                'github_pa_token',
+                'Github - Personal access token',
+            )->onlyWhenUpdating(),
+            ChoiceField::new('github_usertype', 'Github - User Type')
+                ->setChoices(
+                    fn() => [
+                        'User' => 'User',
+                        'Organization' => 'Organization',
+                    ],
+                )
+                ->onlyWhenUpdating(),
             BooleanField::new('isVerified', 'Verificado')->onlyOnForms(),
         ];
     }
@@ -128,8 +151,75 @@ class UserCrudController extends AbstractCrudController
             $entityInstance->eraseCredentials();
         }
 
-        $entityInstance
-            ->setUpdatedAt(new \DateTimeImmutable('now'));
+        $entityInstance->setUpdatedAt(new \DateTimeImmutable('now'));
+
+        $github_usertype = $entityInstance->getGithubUsertype();
+        $github_username = $entityInstance->getGithubUsername();
+        $github_pa_token = $entityInstance->getGithubPaToken();
+
+        if ($github_pa_token && $github_username) {
+            $client = new Client(['base_uri' => 'https://api.github.com/']);
+
+            $type = $github_usertype
+                ? ($github_usertype == 'User'
+                    ? 'users'
+                    : 'orgs')
+                : 'users';
+
+            $uri = "/{$type}/{$github_username}";
+
+            $response = $client->request('GET', $uri, [
+                'headers' => [
+                    'Accept' => 'application/vnd.github+json',
+                    'Authorization' => "token {$github_pa_token}",
+                ],
+            ]);
+
+            if ($response->getStatusCode() == 200) {
+                $x_ratelimit_limit = $response->getHeaderLine(
+                    'x-ratelimit-limit',
+                );
+
+                $body = json_decode($response->getBody(), true);
+
+                if (
+                    $x_ratelimit_limit >= 5000 &&
+                    !empty($body) &&
+                    isset($body['id'])
+                ) {
+                    /**
+                     * @var GithubUserRepository $githubUserRepo
+                     */
+                    $githubUserRepo = $entityManager->getRepository(
+                        GithubUser::class,
+                    );
+
+                    $githubUser = $githubUserRepo->findOneBy([
+                        'github_id' => $body['id'],
+                    ]);
+
+                    $githubUser = $githubUser ? $githubUser : new GithubUser();
+
+                    $githubUser
+                        ->setGithubId($body['id'])
+                        ->setCreatedAt(
+                            new \DateTimeImmutable($body['created_at']),
+                        )
+                        ->setUpdatedAt(
+                            new \DateTimeImmutable($body['updated_at']),
+                        )
+                        ->setName($body['name'])
+                        ->setAvatarUrl($body['avatar_url'])
+                        ->setHtmlUrl($body['html_url'])
+                        ->setType($body['type'])
+                        ->setEmail($body['email'])
+                        ->setPublicRepos($body['public_repos']);
+
+                    $entityManager->persist($githubUser);
+                    $entityInstance->setGithubUser($githubUser);
+                }
+            }
+        }
 
         $entityManager->persist($entityInstance);
         $entityManager->flush();
