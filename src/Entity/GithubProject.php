@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\Github;
+namespace App\Entity;
 
 use App\Entity\Project;
 use App\Repository\GithubProjectRepository;

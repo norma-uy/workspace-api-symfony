@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Entity\Github\GithubUser;
+use App\Entity\GithubUser;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -73,6 +73,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'string', length: 15, nullable: true)]
     private $github_usertype;
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    private $github_pa_token_scope = [];
+
+    #[ORM\Column(type: 'datetimetz_immutable', nullable: true)]
+    private $github_pa_token_expiration;
 
     public function getId(): ?int
     {
@@ -264,6 +270,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setGithubUsertype(?string $github_usertype): self
     {
         $this->github_usertype = $github_usertype;
+
+        return $this;
+    }
+
+    public function getGithubPaTokenScope(): ?array
+    {
+        return $this->github_pa_token_scope;
+    }
+
+    public function setGithubPaTokenScope(?array $github_pa_token_scope): self
+    {
+        $this->github_pa_token_scope = $github_pa_token_scope;
+
+        return $this;
+    }
+
+    public function getGithubPaTokenExpiration(): ?\DateTimeImmutable
+    {
+        return $this->github_pa_token_expiration;
+    }
+
+    public function setGithubPaTokenExpiration(?\DateTimeImmutable $github_pa_token_expiration): self
+    {
+        $this->github_pa_token_expiration = $github_pa_token_expiration;
 
         return $this;
     }

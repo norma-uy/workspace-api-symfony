@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Github\GithubProject;
+use App\Entity\GithubProject;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Entity\Github\GithubProject;
+use App\Entity\GithubProject;
 use App\Repository\ProjectRepository;
 use Doctrine\ORM\Mapping as ORM;
 

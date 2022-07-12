@@ -2,9 +2,10 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Github\GithubUser;
+use App\Entity\GithubUser;
 use App\Entity\User;
 use App\Repository\GithubUserRepository;
+use App\Utility\GithubUtility;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -22,6 +23,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Filter\BooleanFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\TextFilter;
 use GuzzleHttp\Client;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[IsGranted('ROLE_SUPER_ADMIN')]
@@ -45,15 +47,17 @@ class UserCrudController extends AbstractCrudController
             //   %entity_name%, %entity_as_string%,
             //   %entity_id%, %entity_short_id%
             //   %entity_label_singular%, %entity_label_plural%
-            ->setPageTitle('index', 'Listado - Usuarios');
+            ->setPageTitle('index', 'Listado - Usuarios')
+            ->showEntityActionsInlined()
 
-        // in DETAIL and EDIT pages, the closure receives the current entity
-        // as the first argument
-        // ->setPageTitle('detail', fn (Product $product) => (string) $product)
-        // ->setPageTitle('edit', fn (Category $category) => sprintf('Editing <b>%s</b>', $category->getName()))
+            // in DETAIL and EDIT pages, the closure receives the current entity
+            // as the first argument
+            // ->setPageTitle('detail', fn (Product $product) => (string) $product)
+            // ->setPageTitle('edit', fn (Category $category) => sprintf('Editing <b>%s</b>', $category->getName()))
 
-        // the help message displayed to end users (it can contain HTML tags)
-        // ->setHelp('edit', '...');
+            // the help message displayed to end users (it can contain HTML tags)
+            // ->setHelp('edit', '...');
+        ;
     }
 
     public function configureFields(string $pageName): iterable
@@ -62,8 +66,9 @@ class UserCrudController extends AbstractCrudController
             IdField::new('id', 'ID')->hideOnForm(),
             TextField::new('name', 'Nombre'),
             EmailField::new('email', 'E-mail'),
-            TextField::new('plainPassword', 'Contraseña')->onlyOnForms(),
+            TextField::new('plainPassword', 'Contraseña')->setFormType(PasswordType::class)->onlyOnForms(),
             ArrayField::new('roles', 'Roles'),
+            ArrayField::new('github_pa_token_scope', 'Github - Scopes')->onlyOnDetail(),
             TextField::new(
                 'github_username',
                 'Github - Username',
@@ -71,16 +76,16 @@ class UserCrudController extends AbstractCrudController
             TextField::new(
                 'github_pa_token',
                 'Github - Personal access token',
-            )->onlyWhenUpdating(),
+            )->hideOnIndex()->hideWhenCreating(),
             ChoiceField::new('github_usertype', 'Github - User Type')
                 ->setChoices(
-                    fn() => [
+                    fn () => [
                         'User' => 'User',
                         'Organization' => 'Organization',
                     ],
                 )
-                ->onlyWhenUpdating(),
-            BooleanField::new('isVerified', 'Verificado')->onlyOnForms(),
+                ->hideOnIndex()->hideWhenCreating(),
+            BooleanField::new('isVerified', 'Verificado'),
         ];
     }
 
@@ -176,16 +181,13 @@ class UserCrudController extends AbstractCrudController
             ]);
 
             if ($response->getStatusCode() == 200) {
-                $x_ratelimit_limit = $response->getHeaderLine(
-                    'x-ratelimit-limit',
-                );
+
+                $x_oauth_scopes = GithubUtility::HeaderScopesDecode($response->getHeaderLine('X-OAuth-Scopes'));
 
                 $body = json_decode($response->getBody(), true);
 
                 if (
-                    $x_ratelimit_limit >= 5000 &&
-                    !empty($body) &&
-                    isset($body['id'])
+                    !empty($x_oauth_scopes) && !empty($body) && isset($body['id'])
                 ) {
                     /**
                      * @var GithubUserRepository $githubUserRepo
@@ -216,7 +218,13 @@ class UserCrudController extends AbstractCrudController
                         ->setPublicRepos($body['public_repos']);
 
                     $entityManager->persist($githubUser);
+
                     $entityInstance->setGithubUser($githubUser);
+                    $entityInstance->setGithubPaTokenScope($x_oauth_scopes);
+
+                    $github_pa_token_expiration = $response->getHeaderLine('github-authentication-token-expiration');
+                    $github_pa_token_expiration = $github_pa_token_expiration ? new \DateTimeImmutable($github_pa_token_expiration) : null;
+                    $entityInstance->setGithubPaTokenExpiration($github_pa_token_expiration);
                 }
             }
         }
