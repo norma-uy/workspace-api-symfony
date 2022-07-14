@@ -13,6 +13,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
@@ -86,6 +87,7 @@ class UserCrudController extends AbstractCrudController
                 )
                 ->hideOnIndex()->hideWhenCreating(),
             BooleanField::new('isVerified', 'Verificado'),
+            AssociationField::new('github_user')->hideOnForm()
         ];
     }
 
@@ -127,7 +129,6 @@ class UserCrudController extends AbstractCrudController
         }
 
         $entityInstance
-            ->setRoles(['ROLE_ADMIN'])
             ->setCreatedAt(new \DateTimeImmutable('now'));
 
         $entityManager->persist($entityInstance);
@@ -186,9 +187,13 @@ class UserCrudController extends AbstractCrudController
 
                 $body = json_decode($response->getBody(), true);
 
+                // dump($body);
+                // die();
+
                 if (
                     !empty($x_oauth_scopes) && !empty($body) && isset($body['id'])
                 ) {
+
                     /**
                      * @var GithubUserRepository $githubUserRepo
                      */
@@ -203,19 +208,52 @@ class UserCrudController extends AbstractCrudController
                     $githubUser = $githubUser ? $githubUser : new GithubUser();
 
                     $githubUser
+                        ->setLogin($body['login'])
                         ->setGithubId($body['id'])
+                        ->setNodeId($body['node_id'])
+                        ->setAvatarUrl($body['avatar_url'])
+                        ->setGravatarId($body['gravatar_id'])
+                        ->setUrl($body['url'])
+                        ->setHtmlUrl($body['html_url'])
+                        ->setFollowersUrl($body['followers_url'])
+                        ->setFollowingUrl($body['following_url'])
+                        ->setGistsUrl($body['gists_url'])
+                        ->setStarredUrl($body['starred_url'])
+                        ->setSubscriptionsUrl($body['subscriptions_url'])
+                        ->setOrganizationsUrl($body['organizations_url'])
+                        ->setReposUrl($body['repos_url'])
+                        ->setEventsUrl($body['events_url'])
+                        ->setReceivedEventsUrl($body['received_events_url'])
+                        ->setType($body['type'])
+                        ->setSiteAdmin($body['site_admin'])
+                        ->setName($body['name'])
+                        ->setCompany($body['company'])
+                        ->setBlog($body['blog'])
+                        ->setLocation($body['location'])
+                        ->setEmail($body['email'])
+                        //Verify value type
+                        // ->setHireable($body['hireable'])
+                        ->setBio($body['bio'])
+                        ->setTwitterUsername($body['twitter_username'])
+                        ->setPublicRepos($body['public_repos'])
+                        ->setPublicGists($body['public_gists'])
+                        ->setFollowers($body['followers'])
+                        ->setFollowing($body['following'])
                         ->setCreatedAt(
                             new \DateTimeImmutable($body['created_at']),
                         )
                         ->setUpdatedAt(
                             new \DateTimeImmutable($body['updated_at']),
                         )
-                        ->setName($body['name'])
-                        ->setAvatarUrl($body['avatar_url'])
-                        ->setHtmlUrl($body['html_url'])
-                        ->setType($body['type'])
-                        ->setEmail($body['email'])
-                        ->setPublicRepos($body['public_repos']);
+                        ->setPrivateGists($body['private_gists'])
+                        ->setTotalPrivateRepos($body['total_private_repos'])
+                        ->setOwnedPrivateRepos($body['owned_private_repos'])
+                        ->setDiskUsage($body['disk_usage'])
+                        ->setCollaborators($body['collaborators'])
+                        ->setTwoFactorAuthentication($body['two_factor_authentication'])
+                        ->setPlan($body['plan'])
+                        //
+                    ;
 
                     $entityManager->persist($githubUser);
 
