@@ -166,13 +166,7 @@ class UserCrudController extends AbstractCrudController
         if ($github_pa_token && $github_username) {
             $client = new Client(['base_uri' => 'https://api.github.com/']);
 
-            $type = $github_usertype
-                ? ($github_usertype == 'User'
-                    ? 'users'
-                    : 'orgs')
-                : 'users';
-
-            $uri = "/{$type}/{$github_username}";
+            $uri = "/users/{$github_username}";
 
             $response = $client->request('GET', $uri, [
                 'headers' => [
