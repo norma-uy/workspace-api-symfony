@@ -5,6 +5,8 @@ namespace App\Controller\Admin;
 use App\Entity\GithubUser;
 use App\Entity\User;
 use App\Repository\GithubUserRepository;
+use App\Utility\GithubAPI;
+use App\Utility\GithubDataSync;
 use App\Utility\GithubUtility;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -19,7 +21,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\BooleanFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\TextFilter;
 use GuzzleHttp\Client;
@@ -32,6 +33,8 @@ class UserCrudController extends AbstractCrudController
 {
     public function __construct(
         private UserPasswordHasherInterface $userPasswordHasher,
+        private GithubDataSync $githubDataSync,
+        private GithubAPI $githubApi,
     ) {
     }
 
@@ -49,16 +52,15 @@ class UserCrudController extends AbstractCrudController
             //   %entity_id%, %entity_short_id%
             //   %entity_label_singular%, %entity_label_plural%
             ->setPageTitle('index', 'Listado - Usuarios')
-            ->showEntityActionsInlined()
+            ->showEntityActionsInlined();
 
-            // in DETAIL and EDIT pages, the closure receives the current entity
-            // as the first argument
-            // ->setPageTitle('detail', fn (Product $product) => (string) $product)
-            // ->setPageTitle('edit', fn (Category $category) => sprintf('Editing <b>%s</b>', $category->getName()))
+        // in DETAIL and EDIT pages, the closure receives the current entity
+        // as the first argument
+        // ->setPageTitle('detail', fn (Product $product) => (string) $product)
+        // ->setPageTitle('edit', fn (Category $category) => sprintf('Editing <b>%s</b>', $category->getName()))
 
-            // the help message displayed to end users (it can contain HTML tags)
-            // ->setHelp('edit', '...');
-        ;
+        // the help message displayed to end users (it can contain HTML tags)
+        // ->setHelp('edit', '...');
     }
 
     public function configureFields(string $pageName): iterable
@@ -67,27 +69,32 @@ class UserCrudController extends AbstractCrudController
             IdField::new('id', 'ID')->hideOnForm(),
             TextField::new('name', 'Nombre'),
             EmailField::new('email', 'E-mail'),
-            TextField::new('plainPassword', 'Contraseña')->setFormType(PasswordType::class)->onlyOnForms(),
+            TextField::new('plainPassword', 'Contraseña')
+                ->setFormType(PasswordType::class)
+                ->onlyOnForms(),
             ArrayField::new('roles', 'Roles'),
-            ArrayField::new('github_pa_token_scope', 'Github - Scopes')->onlyOnDetail(),
+            ArrayField::new(
+                'github_pa_token_scope',
+                'Github - Scopes',
+            )->onlyOnDetail(),
             TextField::new(
                 'github_username',
                 'Github - Username',
             )->onlyWhenUpdating(),
-            TextField::new(
-                'github_pa_token',
-                'Github - Personal access token',
-            )->hideOnIndex()->hideWhenCreating(),
+            TextField::new('github_pa_token', 'Github - Personal access token')
+                ->hideOnIndex()
+                ->hideWhenCreating(),
             ChoiceField::new('github_usertype', 'Github - User Type')
                 ->setChoices(
-                    fn () => [
+                    fn() => [
                         'User' => 'User',
                         'Organization' => 'Organization',
                     ],
                 )
-                ->hideOnIndex()->hideWhenCreating(),
+                ->hideOnIndex()
+                ->hideWhenCreating(),
             BooleanField::new('isVerified', 'Verificado'),
-            AssociationField::new('github_user')->hideOnForm()
+            AssociationField::new('github_user')->hideOnForm(),
         ];
     }
 
@@ -128,8 +135,7 @@ class UserCrudController extends AbstractCrudController
             $entityInstance->eraseCredentials();
         }
 
-        $entityInstance
-            ->setCreatedAt(new \DateTimeImmutable('now'));
+        $entityInstance->setCreatedAt(new \DateTimeImmutable('now'));
 
         $entityManager->persist($entityInstance);
         $entityManager->flush();
@@ -159,105 +165,46 @@ class UserCrudController extends AbstractCrudController
 
         $entityInstance->setUpdatedAt(new \DateTimeImmutable('now'));
 
-        $github_usertype = $entityInstance->getGithubUsertype();
         $github_username = $entityInstance->getGithubUsername();
         $github_pa_token = $entityInstance->getGithubPaToken();
 
-        if ($github_pa_token && $github_username) {
-            $client = new Client(['base_uri' => 'https://api.github.com/']);
+        $response = $this->githubApi->getUser(
+            $github_pa_token,
+            $github_username,
+        );
 
-            $uri = "/users/{$github_username}";
+        if ($response) {
+            //get github scopes
+            $x_oauth_scopes = GithubUtility::HeaderScopesDecode(
+                $response->getHeaderLine('X-OAuth-Scopes'),
+            );
 
-            $response = $client->request('GET', $uri, [
-                'headers' => [
-                    'Accept' => 'application/vnd.github+json',
-                    'Authorization' => "token {$github_pa_token}",
-                ],
-            ]);
+            //get body request
+            $body = json_decode($response->getBody(), true);
 
-            if ($response->getStatusCode() == 200) {
+            if (
+                !empty($x_oauth_scopes) &&
+                !empty($body) &&
+                isset($body['id'])
+            ) {
+                //github user synchronization
+                $githubUser = $this->githubDataSync->userSync($body);
+                $entityManager->persist($githubUser);
+                $entityInstance->setGithubUser($githubUser);
 
-                $x_oauth_scopes = GithubUtility::HeaderScopesDecode($response->getHeaderLine('X-OAuth-Scopes'));
+                //saving scopes
+                $entityInstance->setGithubPaTokenScope($x_oauth_scopes);
 
-                $body = json_decode($response->getBody(), true);
-
-                // dump($body);
-                // die();
-
-                if (
-                    !empty($x_oauth_scopes) && !empty($body) && isset($body['id'])
-                ) {
-
-                    /**
-                     * @var GithubUserRepository $githubUserRepo
-                     */
-                    $githubUserRepo = $entityManager->getRepository(
-                        GithubUser::class,
-                    );
-
-                    $githubUser = $githubUserRepo->findOneBy([
-                        'github_id' => $body['id'],
-                    ]);
-
-                    $githubUser = $githubUser ? $githubUser : new GithubUser();
-
-                    $githubUser
-                        ->setLogin($body['login'])
-                        ->setGithubId($body['id'])
-                        ->setNodeId($body['node_id'])
-                        ->setAvatarUrl($body['avatar_url'])
-                        ->setGravatarId($body['gravatar_id'])
-                        ->setUrl($body['url'])
-                        ->setHtmlUrl($body['html_url'])
-                        ->setFollowersUrl($body['followers_url'])
-                        ->setFollowingUrl($body['following_url'])
-                        ->setGistsUrl($body['gists_url'])
-                        ->setStarredUrl($body['starred_url'])
-                        ->setSubscriptionsUrl($body['subscriptions_url'])
-                        ->setOrganizationsUrl($body['organizations_url'])
-                        ->setReposUrl($body['repos_url'])
-                        ->setEventsUrl($body['events_url'])
-                        ->setReceivedEventsUrl($body['received_events_url'])
-                        ->setType($body['type'])
-                        ->setSiteAdmin($body['site_admin'])
-                        ->setName($body['name'])
-                        ->setCompany($body['company'])
-                        ->setBlog($body['blog'])
-                        ->setLocation($body['location'])
-                        ->setEmail($body['email'])
-                        //Verify value type
-                        // ->setHireable($body['hireable'])
-                        ->setBio($body['bio'])
-                        ->setTwitterUsername($body['twitter_username'])
-                        ->setPublicRepos($body['public_repos'])
-                        ->setPublicGists($body['public_gists'])
-                        ->setFollowers($body['followers'])
-                        ->setFollowing($body['following'])
-                        ->setCreatedAt(
-                            new \DateTimeImmutable($body['created_at']),
-                        )
-                        ->setUpdatedAt(
-                            new \DateTimeImmutable($body['updated_at']),
-                        )
-                        ->setPrivateGists($body['private_gists'])
-                        ->setTotalPrivateRepos($body['total_private_repos'])
-                        ->setOwnedPrivateRepos($body['owned_private_repos'])
-                        ->setDiskUsage($body['disk_usage'])
-                        ->setCollaborators($body['collaborators'])
-                        ->setTwoFactorAuthentication($body['two_factor_authentication'])
-                        ->setPlan($body['plan'])
-                        //
-                    ;
-
-                    $entityManager->persist($githubUser);
-
-                    $entityInstance->setGithubUser($githubUser);
-                    $entityInstance->setGithubPaTokenScope($x_oauth_scopes);
-
-                    $github_pa_token_expiration = $response->getHeaderLine('github-authentication-token-expiration');
-                    $github_pa_token_expiration = $github_pa_token_expiration ? new \DateTimeImmutable($github_pa_token_expiration) : null;
-                    $entityInstance->setGithubPaTokenExpiration($github_pa_token_expiration);
-                }
+                //Token expiration
+                $github_pa_token_expiration = $response->getHeaderLine(
+                    'github-authentication-token-expiration',
+                );
+                $github_pa_token_expiration = $github_pa_token_expiration
+                    ? new \DateTimeImmutable($github_pa_token_expiration)
+                    : null;
+                $entityInstance->setGithubPaTokenExpiration(
+                    $github_pa_token_expiration,
+                );
             }
         }
 

@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\Project;
 use App\Repository\GithubProjectRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -58,15 +57,6 @@ class GithubProject
 
     #[ORM\Column(type: 'boolean')]
     private $private;
-
-    #[
-        ORM\OneToOne(
-            mappedBy: 'github_project',
-            targetEntity: Project::class,
-            cascade: ['persist', 'remove'],
-        ),
-    ]
-    private $project;
 
     public function getId(): ?int
     {
@@ -250,28 +240,6 @@ class GithubProject
     public function setPrivate(bool $private): self
     {
         $this->private = $private;
-
-        return $this;
-    }
-
-    public function getProject(): ?Project
-    {
-        return $this->project;
-    }
-
-    public function setProject(?Project $project): self
-    {
-        // unset the owning side of the relation if necessary
-        if ($project === null && $this->project !== null) {
-            $this->project->setGithubProject(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($project !== null && $project->getGithubProject() !== $this) {
-            $project->setGithubProject($this);
-        }
-
-        $this->project = $project;
 
         return $this;
     }

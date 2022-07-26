@@ -2,6 +2,8 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\GithubOrganization;
+use App\Entity\Synchronization;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -92,12 +94,24 @@ class DashboardController extends AbstractDashboardController
         ); */
 
         // yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-        
+
         yield MenuItem::linkToCrud(
             'Usuarios',
             'fas fa-users',
             User::class,
         )->setPermission('ROLE_SUPER_ADMIN');
+
+        yield MenuItem::linkToCrud(
+            'Sincronización',
+            'fas fa-sync',
+            Synchronization::class,
+        );
+
+        yield MenuItem::linkToCrud(
+            'Organizaciones',
+            'fas fa-building-columns',
+            GithubOrganization::class,
+        )->setPermission('ROLE_ADMIN');
 
         // yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
         // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);

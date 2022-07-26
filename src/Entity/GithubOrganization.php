@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\GithubOrganizationRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: GithubOrganizationRepository::class)]
@@ -157,8 +159,13 @@ class GithubOrganization
     #[ORM\Column(type: 'json')]
     private $plan = [];
 
-    #[ORM\OneToOne(mappedBy: 'github_organization', targetEntity: Organization::class, cascade: ['persist', 'remove'])]
-    private $organization;
+    #[ORM\ManyToMany(targetEntity: GithubUser::class, mappedBy: 'organizations')]
+    private $members;
+
+    public function __construct()
+    {
+        $this->members = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -741,24 +748,29 @@ class GithubOrganization
         return $this;
     }
 
-    public function getOrganization(): ?Organization
+    /**
+     * @return Collection<int, GithubUser>
+     */
+    public function getMembers(): Collection
     {
-        return $this->organization;
+        return $this->members;
     }
 
-    public function setOrganization(?Organization $organization): self
+    public function addMember(GithubUser $member): self
     {
-        // unset the owning side of the relation if necessary
-        if ($organization === null && $this->organization !== null) {
-            $this->organization->setGithubOrganization(null);
+        if (!$this->members->contains($member)) {
+            $this->members[] = $member;
+            $member->addOrganization($this);
         }
 
-        // set the owning side of the relation if necessary
-        if ($organization !== null && $organization->getGithubOrganization() !== $this) {
-            $organization->setGithubOrganization($this);
-        }
+        return $this;
+    }
 
-        $this->organization = $organization;
+    public function removeMember(GithubUser $member): self
+    {
+        if ($this->members->removeElement($member)) {
+            $member->removeOrganization($this);
+        }
 
         return $this;
     }

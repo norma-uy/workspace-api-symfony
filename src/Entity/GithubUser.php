@@ -4,7 +4,10 @@ namespace App\Entity;
 
 use App\Entity\User;
 use App\Repository\GithubUserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\JoinTable;
 
 #[ORM\Entity(repositoryClass: GithubUserRepository::class)]
 class GithubUser
@@ -139,6 +142,20 @@ class GithubUser
         ),
     ]
     private $user;
+
+    #[
+        ORM\ManyToMany(
+            targetEntity: GithubOrganization::class,
+            inversedBy: 'members',
+        ),
+    ]
+    #[JoinTable(name: 'members')]
+    private $organizations;
+
+    public function __construct()
+    {
+        $this->organizations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -594,8 +611,9 @@ class GithubUser
         return $this->two_factor_authentication;
     }
 
-    public function setTwoFactorAuthentication(bool $two_factor_authentication): self
-    {
+    public function setTwoFactorAuthentication(
+        bool $two_factor_authentication,
+    ): self {
         $this->two_factor_authentication = $two_factor_authentication;
 
         return $this;
@@ -638,5 +656,29 @@ class GithubUser
     public function __toString(): string
     {
         return $this->login ?: $this->email ?: $this->name ?: '';
+    }
+
+    /**
+     * @return Collection<int, GithubOrganization>
+     */
+    public function getOrganizations(): Collection
+    {
+        return $this->organizations;
+    }
+
+    public function addOrganization(GithubOrganization $organization): self
+    {
+        if (!$this->organizations->contains($organization)) {
+            $this->organizations[] = $organization;
+        }
+
+        return $this;
+    }
+
+    public function removeOrganization(GithubOrganization $organization): self
+    {
+        $this->organizations->removeElement($organization);
+
+        return $this;
     }
 }

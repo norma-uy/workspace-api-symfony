@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\OrganizationRepository;
+use App\Repository\SynchronizationRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: OrganizationRepository::class)]
-class Organization
+#[ORM\Entity(repositoryClass: SynchronizationRepository::class)]
+class Synchronization
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -19,14 +19,15 @@ class Organization
     #[ORM\Column(type: 'datetimetz_immutable', nullable: true)]
     private $updated_at;
 
-    #[ORM\Column(type: 'smallint')]
-    private $status;
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private $author;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private $name;
+    #[ORM\Column(type: 'string', length: 125)]
+    private $synchronized_entity;
 
-    #[ORM\OneToOne(inversedBy: 'organization', targetEntity: GithubOrganization::class, cascade: ['persist', 'remove'])]
-    private $github_organization;
+    #[ORM\Column(type: 'json', nullable: true)]
+    private $synchronized_data = [];
 
     public function getId(): ?int
     {
@@ -57,38 +58,38 @@ class Organization
         return $this;
     }
 
-    public function getStatus(): ?int
+    public function getAuthor(): ?User
     {
-        return $this->status;
+        return $this->author;
     }
 
-    public function setStatus(int $status): self
+    public function setAuthor(?User $author): self
     {
-        $this->status = $status;
+        $this->author = $author;
 
         return $this;
     }
 
-    public function getName(): ?string
+    public function getSynchronizedEntity(): ?string
     {
-        return $this->name;
+        return $this->synchronized_entity;
     }
 
-    public function setName(string $name): self
+    public function setSynchronizedEntity(string $synchronized_entity): self
     {
-        $this->name = $name;
+        $this->synchronized_entity = $synchronized_entity;
 
         return $this;
     }
 
-    public function getGithubOrganization(): ?GithubOrganization
+    public function getSynchronizedData(): ?array
     {
-        return $this->github_organization;
+        return $this->synchronized_data;
     }
 
-    public function setGithubOrganization(?GithubOrganization $github_organization): self
+    public function setSynchronizedData(?array $synchronized_data): self
     {
-        $this->github_organization = $github_organization;
+        $this->synchronized_data = $synchronized_data;
 
         return $this;
     }
