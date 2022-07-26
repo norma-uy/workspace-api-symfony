@@ -73,14 +73,8 @@ class UserCrudController extends AbstractCrudController
                 ->setFormType(PasswordType::class)
                 ->onlyOnForms(),
             ArrayField::new('roles', 'Roles'),
-            ArrayField::new(
-                'github_pa_token_scope',
-                'Github - Scopes',
-            )->onlyOnDetail(),
-            TextField::new(
-                'github_username',
-                'Github - Username',
-            )->onlyWhenUpdating(),
+            ArrayField::new('github_pa_token_scope', 'Github - Scopes')->onlyOnDetail(),
+            TextField::new('github_username', 'Github - Username')->onlyWhenUpdating(),
             TextField::new('github_pa_token', 'Github - Personal access token')
                 ->hideOnIndex()
                 ->hideWhenCreating(),
@@ -120,10 +114,8 @@ class UserCrudController extends AbstractCrudController
      * @param User $entityInstance
      * @return void
      */
-    public function persistEntity(
-        EntityManagerInterface $entityManager,
-        $entityInstance,
-    ): void {
+    public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
         if ($entityInstance->getPlainPassword()) {
             $entityInstance->setPassword(
                 $this->userPasswordHasher->hashPassword(
@@ -148,10 +140,8 @@ class UserCrudController extends AbstractCrudController
      * @param User $entityInstance
      * @return void
      */
-    public function updateEntity(
-        EntityManagerInterface $entityManager,
-        $entityInstance,
-    ): void {
+    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
         if ($entityInstance->getPlainPassword()) {
             $entityInstance->setPassword(
                 $this->userPasswordHasher->hashPassword(
@@ -168,10 +158,7 @@ class UserCrudController extends AbstractCrudController
         $github_username = $entityInstance->getGithubUsername();
         $github_pa_token = $entityInstance->getGithubPaToken();
 
-        $response = $this->githubApi->getUser(
-            $github_pa_token,
-            $github_username,
-        );
+        $response = $this->githubApi->getUser($github_pa_token, $github_username);
 
         if ($response) {
             //get github scopes
@@ -182,11 +169,7 @@ class UserCrudController extends AbstractCrudController
             //get body request
             $body = json_decode($response->getBody(), true);
 
-            if (
-                !empty($x_oauth_scopes) &&
-                !empty($body) &&
-                isset($body['id'])
-            ) {
+            if (!empty($x_oauth_scopes) && !empty($body) && isset($body['id'])) {
                 //github user synchronization
                 $githubUser = $this->githubDataSync->userSync($body);
                 $entityManager->persist($githubUser);
@@ -202,9 +185,7 @@ class UserCrudController extends AbstractCrudController
                 $github_pa_token_expiration = $github_pa_token_expiration
                     ? new \DateTimeImmutable($github_pa_token_expiration)
                     : null;
-                $entityInstance->setGithubPaTokenExpiration(
-                    $github_pa_token_expiration,
-                );
+                $entityInstance->setGithubPaTokenExpiration($github_pa_token_expiration);
             }
         }
 

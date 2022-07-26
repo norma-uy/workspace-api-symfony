@@ -22,10 +22,8 @@ class GithubAPI
      * @param string $username
      * @return ResponseInterface|null
      */
-    public function getUser(
-        string $pa_token,
-        string $username,
-    ): ?ResponseInterface {
+    public function getUser(string $pa_token, string $username): ?ResponseInterface
+    {
         if (empty($pa_token) || empty($username)) {
             return null;
         }
@@ -49,10 +47,8 @@ class GithubAPI
      * @param string $org_name
      * @return ResponseInterface|null
      */
-    public function getOrganization(
-        string $pa_token,
-        string $org_name,
-    ): ?ResponseInterface {
+    public function getOrganization(string $pa_token, string $org_name): ?ResponseInterface
+    {
         if (empty($pa_token) || empty($org_name)) {
             return null;
         }
@@ -75,9 +71,8 @@ class GithubAPI
      * @param string $pa_token
      * @return ResponseInterface|null
      */
-    public function getOrganizationByAuthenticatedUser(
-        string $pa_token,
-    ): ?ResponseInterface {
+    public function getOrganizationByAuthenticatedUser(string $pa_token): ?ResponseInterface
+    {
         if (empty($pa_token)) {
             return null;
         }

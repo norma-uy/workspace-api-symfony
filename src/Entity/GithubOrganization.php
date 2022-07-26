@@ -633,8 +633,9 @@ class GithubOrganization
         return $this->members_allowed_repository_creation_type;
     }
 
-    public function setMembersAllowedRepositoryCreationType(string $members_allowed_repository_creation_type): self
-    {
+    public function setMembersAllowedRepositoryCreationType(
+        string $members_allowed_repository_creation_type,
+    ): self {
         $this->members_allowed_repository_creation_type = $members_allowed_repository_creation_type;
 
         return $this;
@@ -645,8 +646,9 @@ class GithubOrganization
         return $this->members_can_create_public_repositories;
     }
 
-    public function setMembersCanCreatePublicRepositories(bool $members_can_create_public_repositories): self
-    {
+    public function setMembersCanCreatePublicRepositories(
+        bool $members_can_create_public_repositories,
+    ): self {
         $this->members_can_create_public_repositories = $members_can_create_public_repositories;
 
         return $this;
@@ -657,8 +659,9 @@ class GithubOrganization
         return $this->members_can_create_private_repositories;
     }
 
-    public function setMembersCanCreatePrivateRepositories(bool $members_can_create_private_repositories): self
-    {
+    public function setMembersCanCreatePrivateRepositories(
+        bool $members_can_create_private_repositories,
+    ): self {
         $this->members_can_create_private_repositories = $members_can_create_private_repositories;
 
         return $this;
@@ -669,8 +672,9 @@ class GithubOrganization
         return $this->members_can_create_internal_repositories;
     }
 
-    public function setMembersCanCreateInternalRepositories(bool $members_can_create_internal_repositories): self
-    {
+    public function setMembersCanCreateInternalRepositories(
+        bool $members_can_create_internal_repositories,
+    ): self {
         $this->members_can_create_internal_repositories = $members_can_create_internal_repositories;
 
         return $this;
@@ -693,8 +697,9 @@ class GithubOrganization
         return $this->members_can_fork_private_repositories;
     }
 
-    public function setMembersCanForkPrivateRepositories(bool $members_can_fork_private_repositories): self
-    {
+    public function setMembersCanForkPrivateRepositories(
+        bool $members_can_fork_private_repositories,
+    ): self {
         $this->members_can_fork_private_repositories = $members_can_fork_private_repositories;
 
         return $this;

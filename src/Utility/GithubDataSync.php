@@ -97,9 +97,7 @@ class GithubDataSync
             'github_id' => $body['id'],
         ]);
 
-        $githubOrganization = $githubOrganization
-            ? $githubOrganization
-            : new GithubOrganization();
+        $githubOrganization = $githubOrganization ? $githubOrganization : new GithubOrganization();
 
         $githubOrganization
             ->setLogin($body['login'])
@@ -137,21 +135,13 @@ class GithubDataSync
             ->setDiskUsage($body['disk_usage'])
             ->setCollaborators($body['collaborators'])
             ->setBillingEmail($body['billing_email'])
-            ->setDefaultRepositoryPermission(
-                $body['default_repository_permission'],
-            )
-            ->setMembersCanCreateRepositories(
-                $body['members_can_create_repositories'],
-            )
-            ->setTwoFactorRequirementEnabled(
-                $body['two_factor_requirement_enabled'],
-            )
+            ->setDefaultRepositoryPermission($body['default_repository_permission'])
+            ->setMembersCanCreateRepositories($body['members_can_create_repositories'])
+            ->setTwoFactorRequirementEnabled($body['two_factor_requirement_enabled'])
             ->setMembersAllowedRepositoryCreationType(
                 $body['members_allowed_repository_creation_type'],
             )
-            ->setMembersCanCreatePublicRepositories(
-                $body['members_can_create_public_repositories'],
-            )
+            ->setMembersCanCreatePublicRepositories($body['members_can_create_public_repositories'])
             ->setMembersCanCreatePrivateRepositories(
                 $body['members_can_create_private_repositories'],
             )
@@ -159,15 +149,9 @@ class GithubDataSync
                 $body['members_can_create_internal_repositories'],
             )
             ->setMembersCanCreatePages($body['members_can_create_pages'])
-            ->setMembersCanForkPrivateRepositories(
-                $body['members_can_fork_private_repositories'],
-            )
-            ->setMembersCanCreatePublicPages(
-                $body['members_can_create_public_pages'],
-            )
-            ->setMembersCanCreatePrivatePages(
-                $body['members_can_create_private_pages'],
-            )
+            ->setMembersCanForkPrivateRepositories($body['members_can_fork_private_repositories'])
+            ->setMembersCanCreatePublicPages($body['members_can_create_public_pages'])
+            ->setMembersCanCreatePrivatePages($body['members_can_create_private_pages'])
             ->setWebCommitSignoffRequired($body['web_commit_signoff_required'])
             ->setPlan(
                 $body['plan'],

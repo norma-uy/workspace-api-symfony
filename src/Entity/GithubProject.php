@@ -224,9 +224,8 @@ class GithubProject
         return $this->organization_permission;
     }
 
-    public function setOrganizationPermission(
-        string $organization_permission,
-    ): self {
+    public function setOrganizationPermission(string $organization_permission): self
+    {
         $this->organization_permission = $organization_permission;
 
         return $this;

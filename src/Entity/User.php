@@ -11,12 +11,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[
-    UniqueEntity(
-        fields: ['email'],
-        message: 'There is already an account with this email',
-    ),
-]
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -30,13 +25,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'datetimetz_immutable', nullable: true)]
     private $updated_at;
 
-    #[
-        ORM\Column(
-            type: 'smallint',
-            nullable: false,
-            options: ['unsigned' => true, 'default' => 0],
-        ),
-    ]
+    #[ORM\Column(type: 'smallint', nullable: false, options: ['unsigned' => true, 'default' => 0])]
     private $status = 0;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
@@ -291,8 +280,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->github_pa_token_expiration;
     }
 
-    public function setGithubPaTokenExpiration(?\DateTimeImmutable $github_pa_token_expiration): self
-    {
+    public function setGithubPaTokenExpiration(
+        ?\DateTimeImmutable $github_pa_token_expiration,
+    ): self {
         $this->github_pa_token_expiration = $github_pa_token_expiration;
 
         return $this;

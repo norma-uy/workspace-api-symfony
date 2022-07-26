@@ -63,10 +63,7 @@ class SynchronizationCrudController extends AbstractCrudController
     {
         return [
             IdField::new('id', 'ID')->hideOnForm(),
-            DateTimeField::new(
-                'create_date',
-                'Fecha de creación',
-            )->hideOnForm(),
+            DateTimeField::new('create_date', 'Fecha de creación')->hideOnForm(),
             AssociationField::new('author', 'Creado por')
                 ->hideOnForm()
                 ->autocomplete(),
@@ -103,10 +100,8 @@ class SynchronizationCrudController extends AbstractCrudController
      * @param Synchronization $entityInstance
      * @return void
      */
-    public function persistEntity(
-        EntityManagerInterface $entityManager,
-        $entityInstance,
-    ): void {
+    public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
         /**
          * @var User $current_user
          */
@@ -124,10 +119,7 @@ class SynchronizationCrudController extends AbstractCrudController
 
                 $github_username = $current_user->getGithubUsername();
 
-                $response = $this->githubApi->getUser(
-                    $github_pa_token,
-                    $github_username,
-                );
+                $response = $this->githubApi->getUser($github_pa_token, $github_username);
 
                 if ($response) {
                     //get github scopes
@@ -138,11 +130,7 @@ class SynchronizationCrudController extends AbstractCrudController
                     //get body request
                     $body = json_decode($response->getBody(), true);
 
-                    if (
-                        !empty($x_oauth_scopes) &&
-                        !empty($body) &&
-                        isset($body['id'])
-                    ) {
+                    if (!empty($x_oauth_scopes) && !empty($body) && isset($body['id'])) {
                         $githubUser = $this->githubDataSync->userSync($body);
 
                         $entityManager->persist($githubUser);
@@ -161,9 +149,7 @@ class SynchronizationCrudController extends AbstractCrudController
                     $github_pa_token_expiration = $github_pa_token_expiration
                         ? new \DateTimeImmutable($github_pa_token_expiration)
                         : null;
-                    $current_user->setGithubPaTokenExpiration(
-                        $github_pa_token_expiration,
-                    );
+                    $current_user->setGithubPaTokenExpiration($github_pa_token_expiration);
                 }
 
                 break;
@@ -197,15 +183,10 @@ class SynchronizationCrudController extends AbstractCrudController
                             if ($org_response) {
                                 //get github scopes
                                 $org_x_oauth_scopes = GithubUtility::HeaderScopesDecode(
-                                    $org_response->getHeaderLine(
-                                        'X-OAuth-Scopes',
-                                    ),
+                                    $org_response->getHeaderLine('X-OAuth-Scopes'),
                                 );
 
-                                $org_body = json_decode(
-                                    $org_response->getBody(),
-                                    true,
-                                );
+                                $org_body = json_decode($org_response->getBody(), true);
 
                                 if (
                                     !empty($org_x_oauth_scopes) &&
@@ -216,13 +197,9 @@ class SynchronizationCrudController extends AbstractCrudController
                                         $org_body,
                                     );
 
-                                    $githubOrganization->addMember(
-                                        $current_user->getGithubUser(),
-                                    );
+                                    $githubOrganization->addMember($current_user->getGithubUser());
 
-                                    $entityManager->persist(
-                                        $githubOrganization,
-                                    );
+                                    $entityManager->persist($githubOrganization);
                                 }
                             }
                         }
@@ -240,9 +217,7 @@ class SynchronizationCrudController extends AbstractCrudController
                     $github_pa_token_expiration = $github_pa_token_expiration
                         ? new \DateTimeImmutable($github_pa_token_expiration)
                         : null;
-                    $current_user->setGithubPaTokenExpiration(
-                        $github_pa_token_expiration,
-                    );
+                    $current_user->setGithubPaTokenExpiration($github_pa_token_expiration);
                 }
                 break;
         }

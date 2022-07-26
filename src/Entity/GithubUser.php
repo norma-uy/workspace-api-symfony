@@ -143,12 +143,7 @@ class GithubUser
     ]
     private $user;
 
-    #[
-        ORM\ManyToMany(
-            targetEntity: GithubOrganization::class,
-            inversedBy: 'members',
-        ),
-    ]
+    #[ORM\ManyToMany(targetEntity: GithubOrganization::class, inversedBy: 'members')]
     #[JoinTable(name: 'members')]
     private $organizations;
 
@@ -611,9 +606,8 @@ class GithubUser
         return $this->two_factor_authentication;
     }
 
-    public function setTwoFactorAuthentication(
-        bool $two_factor_authentication,
-    ): self {
+    public function setTwoFactorAuthentication(bool $two_factor_authentication): self
+    {
         $this->two_factor_authentication = $two_factor_authentication;
 
         return $this;

@@ -39,15 +39,10 @@ class RegistrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
             $user->setPassword(
-                $userPasswordHasher->hashPassword(
-                    $user,
-                    $form->get('plainPassword')->getData(),
-                ),
+                $userPasswordHasher->hashPassword($user, $form->get('plainPassword')->getData()),
             );
 
-            $user
-                ->setCreatedAt(new \DateTimeImmutable('now'))
-                ->setRoles(['ROLE_ADMIN']);
+            $user->setCreatedAt(new \DateTimeImmutable('now'))->setRoles(['ROLE_ADMIN']);
 
             $entityManager->persist($user);
             $entityManager->flush();
@@ -96,11 +91,7 @@ class RegistrationController extends AbstractController
         } catch (VerifyEmailExceptionInterface $exception) {
             $this->addFlash(
                 'verify_email_error',
-                $translator->trans(
-                    $exception->getReason(),
-                    [],
-                    'VerifyEmailBundle',
-                ),
+                $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'),
             );
 
             return $this->redirectToRoute('app_register');

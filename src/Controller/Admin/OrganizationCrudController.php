@@ -49,17 +49,12 @@ class OrganizationCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        return [
-            IdField::new('id', 'ID')->hideOnForm(),
-            TextField::new('name', 'Nombre'),
-        ];
+        return [IdField::new('id', 'ID')->hideOnForm(), TextField::new('name', 'Nombre')];
     }
 
     public function configureFilters(Filters $filters): Filters
     {
-        return $filters
-            ->add(TextFilter::new('id', 'ID'))
-            ->add(TextFilter::new('name', 'Nombre'));
+        return $filters->add(TextFilter::new('id', 'ID'))->add(TextFilter::new('name', 'Nombre'));
     }
 
     public function createEntity(string $entityFqcn)
@@ -74,10 +69,8 @@ class OrganizationCrudController extends AbstractCrudController
      * @param GithubOrganization $entityInstance
      * @return void
      */
-    public function persistEntity(
-        EntityManagerInterface $entityManager,
-        $entityInstance,
-    ): void {
+    public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
         $entityInstance->setCreatedAt(new \DateTimeImmutable('now'));
 
         $entityManager->persist($entityInstance);
@@ -91,10 +84,8 @@ class OrganizationCrudController extends AbstractCrudController
      * @param GithubOrganization $entityInstance
      * @return void
      */
-    public function updateEntity(
-        EntityManagerInterface $entityManager,
-        $entityInstance,
-    ): void {
+    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
         $entityInstance->setUpdatedAt(new \DateTimeImmutable('now'));
 
         $entityManager->persist($entityInstance);
