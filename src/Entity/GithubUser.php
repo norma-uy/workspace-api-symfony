@@ -21,13 +21,13 @@ class GithubUser
     private $login;
 
     #[ORM\Column(type: 'integer')]
-    private $github_id;
+    private $githubId;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $node_id;
+    private $nodeId;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $avatar_url;
+    private $avatarUrl;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $gravatar_id;
@@ -36,40 +36,40 @@ class GithubUser
     private $url;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $html_url;
+    private $htmlUrl;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $followers_url;
+    private $followersUrl;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $following_url;
+    private $followingUrl;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $gists_url;
+    private $gistsUrl;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $starred_url;
+    private $starredUrl;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $subscriptions_url;
+    private $subscriptionsUrl;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $organizations_url;
+    private $organizationsUrl;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $repos_url;
+    private $reposUrl;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $events_url;
+    private $eventsUrl;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $received_events_url;
+    private $receivedEventsUrl;
 
     #[ORM\Column(type: 'string', length: 15)]
     private $type;
 
     #[ORM\Column(type: 'boolean')]
-    private $site_admin;
+    private $siteAdmin;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $name;
@@ -93,13 +93,13 @@ class GithubUser
     private $bio;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $twitter_username;
+    private $twitterUsername;
 
     #[ORM\Column(type: 'integer')]
-    private $public_repos;
+    private $publicRepos;
 
     #[ORM\Column(type: 'integer')]
-    private $public_gists;
+    private $publicGists;
 
     #[ORM\Column(type: 'integer')]
     private $followers;
@@ -108,35 +108,35 @@ class GithubUser
     private $following;
 
     #[ORM\Column(type: 'datetimetz_immutable')]
-    private $created_at;
+    private $createdAt;
 
     #[ORM\Column(type: 'datetimetz_immutable', nullable: true)]
-    private $updated_at;
+    private $updatedAt;
 
     #[ORM\Column(type: 'integer')]
-    private $private_gists;
+    private $privateGists;
 
     #[ORM\Column(type: 'integer')]
-    private $total_private_repos;
+    private $totalPrivateRepos;
 
     #[ORM\Column(type: 'integer')]
-    private $owned_private_repos;
+    private $ownedPrivateRepos;
 
     #[ORM\Column(type: 'integer')]
-    private $disk_usage;
+    private $diskUsage;
 
     #[ORM\Column(type: 'integer')]
     private $collaborators;
 
     #[ORM\Column(type: 'boolean')]
-    private $two_factor_authentication;
+    private $twoFactorAuthentication;
 
     #[ORM\Column(type: 'json')]
     private $plan = [];
 
     #[
         ORM\OneToOne(
-            mappedBy: 'github_user',
+            mappedBy: 'githubUser',
             targetEntity: User::class,
             cascade: ['persist', 'remove'],
         ),
@@ -171,36 +171,36 @@ class GithubUser
 
     public function getGithubId(): ?int
     {
-        return $this->github_id;
+        return $this->githubId;
     }
 
-    public function setGithubId(int $github_id): self
+    public function setGithubId(int $githubId): self
     {
-        $this->github_id = $github_id;
+        $this->githubId = $githubId;
 
         return $this;
     }
 
     public function getNodeId(): ?string
     {
-        return $this->node_id;
+        return $this->nodeId;
     }
 
-    public function setNodeId(string $node_id): self
+    public function setNodeId(string $nodeId): self
     {
-        $this->node_id = $node_id;
+        $this->nodeId = $nodeId;
 
         return $this;
     }
 
     public function getAvatarUrl(): ?string
     {
-        return $this->avatar_url;
+        return $this->avatarUrl;
     }
 
-    public function setAvatarUrl(string $avatar_url): self
+    public function setAvatarUrl(string $avatarUrl): self
     {
-        $this->avatar_url = $avatar_url;
+        $this->avatarUrl = $avatarUrl;
 
         return $this;
     }
@@ -231,120 +231,120 @@ class GithubUser
 
     public function getHtmlUrl(): ?string
     {
-        return $this->html_url;
+        return $this->htmlUrl;
     }
 
-    public function setHtmlUrl(string $html_url): self
+    public function setHtmlUrl(string $htmlUrl): self
     {
-        $this->html_url = $html_url;
+        $this->htmlUrl = $htmlUrl;
 
         return $this;
     }
 
     public function getFollowersUrl(): ?string
     {
-        return $this->followers_url;
+        return $this->followersUrl;
     }
 
-    public function setFollowersUrl(string $followers_url): self
+    public function setFollowersUrl(string $followersUrl): self
     {
-        $this->followers_url = $followers_url;
+        $this->followersUrl = $followersUrl;
 
         return $this;
     }
 
     public function getFollowingUrl(): ?string
     {
-        return $this->following_url;
+        return $this->followingUrl;
     }
 
-    public function setFollowingUrl(string $following_url): self
+    public function setFollowingUrl(string $followingUrl): self
     {
-        $this->following_url = $following_url;
+        $this->followingUrl = $followingUrl;
 
         return $this;
     }
 
     public function getGistsUrl(): ?string
     {
-        return $this->gists_url;
+        return $this->gistsUrl;
     }
 
-    public function setGistsUrl(string $gists_url): self
+    public function setGistsUrl(string $gistsUrl): self
     {
-        $this->gists_url = $gists_url;
+        $this->gistsUrl = $gistsUrl;
 
         return $this;
     }
 
     public function getStarredUrl(): ?string
     {
-        return $this->starred_url;
+        return $this->starredUrl;
     }
 
-    public function setStarredUrl(string $starred_url): self
+    public function setStarredUrl(string $starredUrl): self
     {
-        $this->starred_url = $starred_url;
+        $this->starredUrl = $starredUrl;
 
         return $this;
     }
 
     public function getSubscriptionsUrl(): ?string
     {
-        return $this->subscriptions_url;
+        return $this->subscriptionsUrl;
     }
 
-    public function setSubscriptionsUrl(string $subscriptions_url): self
+    public function setSubscriptionsUrl(string $subscriptionsUrl): self
     {
-        $this->subscriptions_url = $subscriptions_url;
+        $this->subscriptionsUrl = $subscriptionsUrl;
 
         return $this;
     }
 
     public function getOrganizationsUrl(): ?string
     {
-        return $this->organizations_url;
+        return $this->organizationsUrl;
     }
 
-    public function setOrganizationsUrl(string $organizations_url): self
+    public function setOrganizationsUrl(string $organizationsUrl): self
     {
-        $this->organizations_url = $organizations_url;
+        $this->organizationsUrl = $organizationsUrl;
 
         return $this;
     }
 
     public function getReposUrl(): ?string
     {
-        return $this->repos_url;
+        return $this->reposUrl;
     }
 
-    public function setReposUrl(string $repos_url): self
+    public function setReposUrl(string $reposUrl): self
     {
-        $this->repos_url = $repos_url;
+        $this->reposUrl = $reposUrl;
 
         return $this;
     }
 
     public function getEventsUrl(): ?string
     {
-        return $this->events_url;
+        return $this->eventsUrl;
     }
 
-    public function setEventsUrl(string $events_url): self
+    public function setEventsUrl(string $eventsUrl): self
     {
-        $this->events_url = $events_url;
+        $this->eventsUrl = $eventsUrl;
 
         return $this;
     }
 
     public function getReceivedEventsUrl(): ?string
     {
-        return $this->received_events_url;
+        return $this->receivedEventsUrl;
     }
 
-    public function setReceivedEventsUrl(string $received_events_url): self
+    public function setReceivedEventsUrl(string $receivedEventsUrl): self
     {
-        $this->received_events_url = $received_events_url;
+        $this->receivedEventsUrl = $receivedEventsUrl;
 
         return $this;
     }
@@ -363,12 +363,12 @@ class GithubUser
 
     public function isSiteAdmin(): ?bool
     {
-        return $this->site_admin;
+        return $this->siteAdmin;
     }
 
-    public function setSiteAdmin(bool $site_admin): self
+    public function setSiteAdmin(bool $siteAdmin): self
     {
-        $this->site_admin = $site_admin;
+        $this->siteAdmin = $siteAdmin;
 
         return $this;
     }
@@ -459,36 +459,36 @@ class GithubUser
 
     public function getTwitterUsername(): ?string
     {
-        return $this->twitter_username;
+        return $this->twitterUsername;
     }
 
-    public function setTwitterUsername(?string $twitter_username): self
+    public function setTwitterUsername(?string $twitterUsername): self
     {
-        $this->twitter_username = $twitter_username;
+        $this->twitterUsername = $twitterUsername;
 
         return $this;
     }
 
     public function getPublicRepos(): ?int
     {
-        return $this->public_repos;
+        return $this->publicRepos;
     }
 
-    public function setPublicRepos(int $public_repos): self
+    public function setPublicRepos(int $publicRepos): self
     {
-        $this->public_repos = $public_repos;
+        $this->publicRepos = $publicRepos;
 
         return $this;
     }
 
     public function getPublicGists(): ?int
     {
-        return $this->public_gists;
+        return $this->publicGists;
     }
 
-    public function setPublicGists(int $public_gists): self
+    public function setPublicGists(int $publicGists): self
     {
-        $this->public_gists = $public_gists;
+        $this->publicGists = $publicGists;
 
         return $this;
     }
@@ -519,72 +519,72 @@ class GithubUser
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
-        $this->created_at = $created_at;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
     public function getUpdatedAt(): ?\DateTimeImmutable
     {
-        return $this->updated_at;
+        return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updated_at): self
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
     {
-        $this->updated_at = $updated_at;
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
 
     public function getPrivateGists(): ?int
     {
-        return $this->private_gists;
+        return $this->privateGists;
     }
 
-    public function setPrivateGists(int $private_gists): self
+    public function setPrivateGists(int $privateGists): self
     {
-        $this->private_gists = $private_gists;
+        $this->privateGists = $privateGists;
 
         return $this;
     }
 
     public function getTotalPrivateRepos(): ?int
     {
-        return $this->total_private_repos;
+        return $this->totalPrivateRepos;
     }
 
-    public function setTotalPrivateRepos(int $total_private_repos): self
+    public function setTotalPrivateRepos(int $totalPrivateRepos): self
     {
-        $this->total_private_repos = $total_private_repos;
+        $this->totalPrivateRepos = $totalPrivateRepos;
 
         return $this;
     }
 
     public function getOwnedPrivateRepos(): ?int
     {
-        return $this->owned_private_repos;
+        return $this->ownedPrivateRepos;
     }
 
-    public function setOwnedPrivateRepos(int $owned_private_repos): self
+    public function setOwnedPrivateRepos(int $ownedPrivateRepos): self
     {
-        $this->owned_private_repos = $owned_private_repos;
+        $this->ownedPrivateRepos = $ownedPrivateRepos;
 
         return $this;
     }
 
     public function getDiskUsage(): ?int
     {
-        return $this->disk_usage;
+        return $this->diskUsage;
     }
 
-    public function setDiskUsage(int $disk_usage): self
+    public function setDiskUsage(int $diskUsage): self
     {
-        $this->disk_usage = $disk_usage;
+        $this->diskUsage = $diskUsage;
 
         return $this;
     }
@@ -603,12 +603,12 @@ class GithubUser
 
     public function isTwoFactorAuthentication(): ?bool
     {
-        return $this->two_factor_authentication;
+        return $this->twoFactorAuthentication;
     }
 
-    public function setTwoFactorAuthentication(bool $two_factor_authentication): self
+    public function setTwoFactorAuthentication(bool $twoFactorAuthentication): self
     {
-        $this->two_factor_authentication = $two_factor_authentication;
+        $this->twoFactorAuthentication = $twoFactorAuthentication;
 
         return $this;
     }

@@ -19,34 +19,34 @@ class GithubOrganization
     private $login;
 
     #[ORM\Column(type: 'integer')]
-    private $github_id;
+    private $githubId;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $node_id;
+    private $nodeId;
 
     #[ORM\Column(type: 'string', length: 255)]
     private $url;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $repos_url;
+    private $reposUrl;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $events_url;
+    private $eventsUrl;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $hooks_url;
+    private $hooksUrl;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $issues_url;
+    private $issuesUrl;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $members_url;
+    private $membersUrl;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $public_members_url;
+    private $public_membersUrl;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $avatar_url;
+    private $avatarUrl;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $description;
@@ -67,22 +67,22 @@ class GithubOrganization
     private $email;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $twitter_username;
+    private $twitterUsername;
 
     #[ORM\Column(type: 'boolean')]
-    private $is_verified;
+    private $isVerified;
 
     #[ORM\Column(type: 'boolean')]
-    private $has_organization_projects;
+    private $hasOrganizationProjects;
 
     #[ORM\Column(type: 'boolean')]
-    private $has_repository_projects;
+    private $hasRepositoryProjects;
 
     #[ORM\Column(type: 'integer')]
-    private $public_repos;
+    private $publicRepos;
 
     #[ORM\Column(type: 'integer')]
-    private $public_gists;
+    private $publicGists;
 
     #[ORM\Column(type: 'integer')]
     private $followers;
@@ -91,70 +91,70 @@ class GithubOrganization
     private $following;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $html_url;
+    private $htmlUrl;
 
     #[ORM\Column(type: 'datetimetz_immutable')]
-    private $created_at;
+    private $createdAt;
 
     #[ORM\Column(type: 'datetimetz_immutable', nullable: true)]
-    private $updated_at;
+    private $updatedAt;
 
     #[ORM\Column(type: 'string', length: 15)]
     private $type;
 
     #[ORM\Column(type: 'integer')]
-    private $total_private_repos;
+    private $totalPrivateRepos;
 
     #[ORM\Column(type: 'integer')]
-    private $owned_private_repos;
+    private $ownedPrivateRepos;
 
     #[ORM\Column(type: 'integer')]
-    private $private_gists;
+    private $privateGists;
 
     #[ORM\Column(type: 'integer')]
-    private $disk_usage;
+    private $diskUsage;
 
     #[ORM\Column(type: 'integer')]
     private $collaborators;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $billing_email;
+    private $billingEmail;
 
     #[ORM\Column(type: 'string', length: 15)]
-    private $default_repository_permission;
+    private $defaultRepositoryPermission;
 
     #[ORM\Column(type: 'boolean')]
-    private $members_can_create_repositories;
+    private $membersCanCreateRepositories;
 
     #[ORM\Column(type: 'boolean')]
-    private $two_factor_requirement_enabled;
+    private $twoFactorRequirementEnabled;
 
     #[ORM\Column(type: 'string', length: 15)]
-    private $members_allowed_repository_creation_type;
+    private $membersAllowedRepositoryCreationType;
 
     #[ORM\Column(type: 'boolean')]
-    private $members_can_create_public_repositories;
+    private $membersCanCreatePublicRepositories;
 
     #[ORM\Column(type: 'boolean')]
-    private $members_can_create_private_repositories;
+    private $membersCanCreatePrivateRepositories;
 
     #[ORM\Column(type: 'boolean')]
-    private $members_can_create_internal_repositories;
+    private $membersCanCreateInternalRepositories;
 
     #[ORM\Column(type: 'boolean')]
-    private $members_can_create_pages;
+    private $membersCanCreatePages;
 
     #[ORM\Column(type: 'boolean')]
-    private $members_can_fork_private_repositories;
+    private $membersCanForkPrivateRepositories;
 
     #[ORM\Column(type: 'boolean')]
-    private $members_can_create_public_pages;
+    private $membersCanCreatePublicPages;
 
     #[ORM\Column(type: 'boolean')]
-    private $members_can_create_private_pages;
+    private $membersCanCreatePrivatePages;
 
     #[ORM\Column(type: 'boolean')]
-    private $web_commit_signoff_required;
+    private $webCommitSignoffRequired;
 
     #[ORM\Column(type: 'json')]
     private $plan = [];
@@ -186,24 +186,24 @@ class GithubOrganization
 
     public function getGithubId(): ?int
     {
-        return $this->github_id;
+        return $this->githubId;
     }
 
-    public function setGithubId(int $github_id): self
+    public function setGithubId(int $githubId): self
     {
-        $this->github_id = $github_id;
+        $this->githubId = $githubId;
 
         return $this;
     }
 
     public function getNodeId(): ?string
     {
-        return $this->node_id;
+        return $this->nodeId;
     }
 
-    public function setNodeId(string $node_id): self
+    public function setNodeId(string $nodeId): self
     {
-        $this->node_id = $node_id;
+        $this->nodeId = $nodeId;
 
         return $this;
     }
@@ -222,84 +222,84 @@ class GithubOrganization
 
     public function getReposUrl(): ?string
     {
-        return $this->repos_url;
+        return $this->reposUrl;
     }
 
-    public function setReposUrl(string $repos_url): self
+    public function setReposUrl(string $reposUrl): self
     {
-        $this->repos_url = $repos_url;
+        $this->reposUrl = $reposUrl;
 
         return $this;
     }
 
     public function getEventsUrl(): ?string
     {
-        return $this->events_url;
+        return $this->eventsUrl;
     }
 
-    public function setEventsUrl(string $events_url): self
+    public function setEventsUrl(string $eventsUrl): self
     {
-        $this->events_url = $events_url;
+        $this->eventsUrl = $eventsUrl;
 
         return $this;
     }
 
     public function getHooksUrl(): ?string
     {
-        return $this->hooks_url;
+        return $this->hooksUrl;
     }
 
-    public function setHooksUrl(string $hooks_url): self
+    public function setHooksUrl(string $hooksUrl): self
     {
-        $this->hooks_url = $hooks_url;
+        $this->hooksUrl = $hooksUrl;
 
         return $this;
     }
 
     public function getIssuesUrl(): ?string
     {
-        return $this->issues_url;
+        return $this->issuesUrl;
     }
 
-    public function setIssuesUrl(string $issues_url): self
+    public function setIssuesUrl(string $issuesUrl): self
     {
-        $this->issues_url = $issues_url;
+        $this->issuesUrl = $issuesUrl;
 
         return $this;
     }
 
     public function getMembersUrl(): ?string
     {
-        return $this->members_url;
+        return $this->membersUrl;
     }
 
-    public function setMembersUrl(string $members_url): self
+    public function setMembersUrl(string $membersUrl): self
     {
-        $this->members_url = $members_url;
+        $this->membersUrl = $membersUrl;
 
         return $this;
     }
 
     public function getPublicMembersUrl(): ?string
     {
-        return $this->public_members_url;
+        return $this->public_membersUrl;
     }
 
-    public function setPublicMembersUrl(string $public_members_url): self
+    public function setPublicMembersUrl(string $public_membersUrl): self
     {
-        $this->public_members_url = $public_members_url;
+        $this->public_membersUrl = $public_membersUrl;
 
         return $this;
     }
 
     public function getAvatarUrl(): ?string
     {
-        return $this->avatar_url;
+        return $this->avatarUrl;
     }
 
-    public function setAvatarUrl(string $avatar_url): self
+    public function setAvatarUrl(string $avatarUrl): self
     {
-        $this->avatar_url = $avatar_url;
+        $this->avatarUrl = $avatarUrl;
 
         return $this;
     }
@@ -378,72 +378,72 @@ class GithubOrganization
 
     public function getTwitterUsername(): ?string
     {
-        return $this->twitter_username;
+        return $this->twitterUsername;
     }
 
-    public function setTwitterUsername(?string $twitter_username): self
+    public function setTwitterUsername(?string $twitterUsername): self
     {
-        $this->twitter_username = $twitter_username;
+        $this->twitterUsername = $twitterUsername;
 
         return $this;
     }
 
     public function isIsVerified(): ?bool
     {
-        return $this->is_verified;
+        return $this->isVerified;
     }
 
-    public function setIsVerified(bool $is_verified): self
+    public function setIsVerified(bool $isVerified): self
     {
-        $this->is_verified = $is_verified;
+        $this->isVerified = $isVerified;
 
         return $this;
     }
 
     public function isHasOrganizationProjects(): ?bool
     {
-        return $this->has_organization_projects;
+        return $this->hasOrganizationProjects;
     }
 
-    public function setHasOrganizationProjects(bool $has_organization_projects): self
+    public function setHasOrganizationProjects(bool $hasOrganizationProjects): self
     {
-        $this->has_organization_projects = $has_organization_projects;
+        $this->hasOrganizationProjects = $hasOrganizationProjects;
 
         return $this;
     }
 
     public function isHasRepositoryProjects(): ?bool
     {
-        return $this->has_repository_projects;
+        return $this->hasRepositoryProjects;
     }
 
-    public function setHasRepositoryProjects(bool $has_repository_projects): self
+    public function setHasRepositoryProjects(bool $hasRepositoryProjects): self
     {
-        $this->has_repository_projects = $has_repository_projects;
+        $this->hasRepositoryProjects = $hasRepositoryProjects;
 
         return $this;
     }
 
     public function getPublicRepos(): ?int
     {
-        return $this->public_repos;
+        return $this->publicRepos;
     }
 
-    public function setPublicRepos(int $public_repos): self
+    public function setPublicRepos(int $publicRepos): self
     {
-        $this->public_repos = $public_repos;
+        $this->publicRepos = $publicRepos;
 
         return $this;
     }
 
     public function getPublicGists(): ?int
     {
-        return $this->public_gists;
+        return $this->publicGists;
     }
 
-    public function setPublicGists(int $public_gists): self
+    public function setPublicGists(int $publicGists): self
     {
-        $this->public_gists = $public_gists;
+        $this->publicGists = $publicGists;
 
         return $this;
     }
@@ -474,36 +474,36 @@ class GithubOrganization
 
     public function getHtmlUrl(): ?string
     {
-        return $this->html_url;
+        return $this->htmlUrl;
     }
 
-    public function setHtmlUrl(string $html_url): self
+    public function setHtmlUrl(string $htmlUrl): self
     {
-        $this->html_url = $html_url;
+        $this->htmlUrl = $htmlUrl;
 
         return $this;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
-        $this->created_at = $created_at;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
     public function getUpdatedAt(): ?\DateTimeImmutable
     {
-        return $this->updated_at;
+        return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updated_at): self
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
     {
-        $this->updated_at = $updated_at;
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
@@ -522,48 +522,48 @@ class GithubOrganization
 
     public function getTotalPrivateRepos(): ?int
     {
-        return $this->total_private_repos;
+        return $this->totalPrivateRepos;
     }
 
-    public function setTotalPrivateRepos(int $total_private_repos): self
+    public function setTotalPrivateRepos(int $totalPrivateRepos): self
     {
-        $this->total_private_repos = $total_private_repos;
+        $this->totalPrivateRepos = $totalPrivateRepos;
 
         return $this;
     }
 
     public function getOwnedPrivateRepos(): ?int
     {
-        return $this->owned_private_repos;
+        return $this->ownedPrivateRepos;
     }
 
-    public function setOwnedPrivateRepos(int $owned_private_repos): self
+    public function setOwnedPrivateRepos(int $ownedPrivateRepos): self
     {
-        $this->owned_private_repos = $owned_private_repos;
+        $this->ownedPrivateRepos = $ownedPrivateRepos;
 
         return $this;
     }
 
     public function getPrivateGists(): ?int
     {
-        return $this->private_gists;
+        return $this->privateGists;
     }
 
-    public function setPrivateGists(int $private_gists): self
+    public function setPrivateGists(int $privateGists): self
     {
-        $this->private_gists = $private_gists;
+        $this->privateGists = $privateGists;
 
         return $this;
     }
 
     public function getDiskUsage(): ?int
     {
-        return $this->disk_usage;
+        return $this->diskUsage;
     }
 
-    public function setDiskUsage(int $disk_usage): self
+    public function setDiskUsage(int $diskUsage): self
     {
-        $this->disk_usage = $disk_usage;
+        $this->diskUsage = $diskUsage;
 
         return $this;
     }
@@ -582,161 +582,161 @@ class GithubOrganization
 
     public function getBillingEmail(): ?string
     {
-        return $this->billing_email;
+        return $this->billingEmail;
     }
 
-    public function setBillingEmail(string $billing_email): self
+    public function setBillingEmail(string $billingEmail): self
     {
-        $this->billing_email = $billing_email;
+        $this->billingEmail = $billingEmail;
 
         return $this;
     }
 
     public function getDefaultRepositoryPermission(): ?string
     {
-        return $this->default_repository_permission;
+        return $this->defaultRepositoryPermission;
     }
 
-    public function setDefaultRepositoryPermission(string $default_repository_permission): self
+    public function setDefaultRepositoryPermission(string $defaultRepositoryPermission): self
     {
-        $this->default_repository_permission = $default_repository_permission;
+        $this->defaultRepositoryPermission = $defaultRepositoryPermission;
 
         return $this;
     }
 
     public function isMembersCanCreateRepositories(): ?bool
     {
-        return $this->members_can_create_repositories;
+        return $this->membersCanCreateRepositories;
     }
 
-    public function setMembersCanCreateRepositories(bool $members_can_create_repositories): self
+    public function setMembersCanCreateRepositories(bool $membersCanCreateRepositories): self
     {
-        $this->members_can_create_repositories = $members_can_create_repositories;
+        $this->membersCanCreateRepositories = $membersCanCreateRepositories;
 
         return $this;
     }
 
     public function isTwoFactorRequirementEnabled(): ?bool
     {
-        return $this->two_factor_requirement_enabled;
+        return $this->twoFactorRequirementEnabled;
     }
 
-    public function setTwoFactorRequirementEnabled(bool $two_factor_requirement_enabled): self
+    public function setTwoFactorRequirementEnabled(bool $twoFactorRequirementEnabled): self
     {
-        $this->two_factor_requirement_enabled = $two_factor_requirement_enabled;
+        $this->twoFactorRequirementEnabled = $twoFactorRequirementEnabled;
 
         return $this;
     }
 
     public function getMembersAllowedRepositoryCreationType(): ?string
     {
-        return $this->members_allowed_repository_creation_type;
+        return $this->membersAllowedRepositoryCreationType;
     }
 
     public function setMembersAllowedRepositoryCreationType(
-        string $members_allowed_repository_creation_type,
+        string $membersAllowedRepositoryCreationType,
     ): self {
-        $this->members_allowed_repository_creation_type = $members_allowed_repository_creation_type;
+        $this->membersAllowedRepositoryCreationType = $membersAllowedRepositoryCreationType;
 
         return $this;
     }
 
     public function isMembersCanCreatePublicRepositories(): ?bool
     {
-        return $this->members_can_create_public_repositories;
+        return $this->membersCanCreatePublicRepositories;
     }
 
     public function setMembersCanCreatePublicRepositories(
-        bool $members_can_create_public_repositories,
+        bool $membersCanCreatePublicRepositories,
     ): self {
-        $this->members_can_create_public_repositories = $members_can_create_public_repositories;
+        $this->membersCanCreatePublicRepositories = $membersCanCreatePublicRepositories;
 
         return $this;
     }
 
     public function isMembersCanCreatePrivateRepositories(): ?bool
     {
-        return $this->members_can_create_private_repositories;
+        return $this->membersCanCreatePrivateRepositories;
     }
 
     public function setMembersCanCreatePrivateRepositories(
-        bool $members_can_create_private_repositories,
+        bool $membersCanCreatePrivateRepositories,
     ): self {
-        $this->members_can_create_private_repositories = $members_can_create_private_repositories;
+        $this->membersCanCreatePrivateRepositories = $membersCanCreatePrivateRepositories;
 
         return $this;
     }
 
     public function isMembersCanCreateInternalRepositories(): ?bool
     {
-        return $this->members_can_create_internal_repositories;
+        return $this->membersCanCreateInternalRepositories;
     }
 
     public function setMembersCanCreateInternalRepositories(
-        bool $members_can_create_internal_repositories,
+        bool $membersCanCreateInternalRepositories,
     ): self {
-        $this->members_can_create_internal_repositories = $members_can_create_internal_repositories;
+        $this->membersCanCreateInternalRepositories = $membersCanCreateInternalRepositories;
 
         return $this;
     }
 
     public function isMembersCanCreatePages(): ?bool
     {
-        return $this->members_can_create_pages;
+        return $this->membersCanCreatePages;
     }
 
-    public function setMembersCanCreatePages(bool $members_can_create_pages): self
+    public function setMembersCanCreatePages(bool $membersCanCreatePages): self
     {
-        $this->members_can_create_pages = $members_can_create_pages;
+        $this->membersCanCreatePages = $membersCanCreatePages;
 
         return $this;
     }
 
     public function isMembersCanForkPrivateRepositories(): ?bool
     {
-        return $this->members_can_fork_private_repositories;
+        return $this->membersCanForkPrivateRepositories;
     }
 
     public function setMembersCanForkPrivateRepositories(
-        bool $members_can_fork_private_repositories,
+        bool $membersCanForkPrivateRepositories,
     ): self {
-        $this->members_can_fork_private_repositories = $members_can_fork_private_repositories;
+        $this->membersCanForkPrivateRepositories = $membersCanForkPrivateRepositories;
 
         return $this;
     }
 
     public function isMembersCanCreatePublicPages(): ?bool
     {
-        return $this->members_can_create_public_pages;
+        return $this->membersCanCreatePublicPages;
     }
 
-    public function setMembersCanCreatePublicPages(bool $members_can_create_public_pages): self
+    public function setMembersCanCreatePublicPages(bool $membersCanCreatePublicPages): self
     {
-        $this->members_can_create_public_pages = $members_can_create_public_pages;
+        $this->membersCanCreatePublicPages = $membersCanCreatePublicPages;
 
         return $this;
     }
 
     public function isMembersCanCreatePrivatePages(): ?bool
     {
-        return $this->members_can_create_private_pages;
+        return $this->membersCanCreatePrivatePages;
     }
 
-    public function setMembersCanCreatePrivatePages(bool $members_can_create_private_pages): self
+    public function setMembersCanCreatePrivatePages(bool $membersCanCreatePrivatePages): self
     {
-        $this->members_can_create_private_pages = $members_can_create_private_pages;
+        $this->membersCanCreatePrivatePages = $membersCanCreatePrivatePages;
 
         return $this;
     }
 
     public function isWebCommitSignoffRequired(): ?bool
     {
-        return $this->web_commit_signoff_required;
+        return $this->webCommitSignoffRequired;
     }
 
-    public function setWebCommitSignoffRequired(bool $web_commit_signoff_required): self
+    public function setWebCommitSignoffRequired(bool $webCommitSignoffRequired): self
     {
-        $this->web_commit_signoff_required = $web_commit_signoff_required;
+        $this->webCommitSignoffRequired = $webCommitSignoffRequired;
 
         return $this;
     }

@@ -73,12 +73,12 @@ class UserCrudController extends AbstractCrudController
                 ->setFormType(PasswordType::class)
                 ->onlyOnForms(),
             ArrayField::new('roles', 'Roles'),
-            ArrayField::new('github_pa_token_scope', 'Github - Scopes')->onlyOnDetail(),
-            TextField::new('github_username', 'Github - Username')->onlyWhenUpdating(),
-            TextField::new('github_pa_token', 'Github - Personal access token')
+            ArrayField::new('githubPaTokenScope', 'Github - Scopes')->onlyOnDetail(),
+            TextField::new('githubUsername', 'Github - Username')->onlyWhenUpdating(),
+            TextField::new('githubPaToken', 'Github - Personal access token')
                 ->hideOnIndex()
                 ->hideWhenCreating(),
-            ChoiceField::new('github_usertype', 'Github - User Type')
+            ChoiceField::new('githubUsertype', 'Github - User Type')
                 ->setChoices(
                     fn() => [
                         'User' => 'User',
@@ -88,7 +88,7 @@ class UserCrudController extends AbstractCrudController
                 ->hideOnIndex()
                 ->hideWhenCreating(),
             BooleanField::new('isVerified', 'Verificado'),
-            AssociationField::new('github_user')->hideOnForm(),
+            AssociationField::new('githubUser')->hideOnForm(),
         ];
     }
 

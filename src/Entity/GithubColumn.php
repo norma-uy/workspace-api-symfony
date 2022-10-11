@@ -17,25 +17,25 @@ class GithubColumn
     private $url;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $project_url;
+    private $projectUrl;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $cards_url;
+    private $cardsUrl;
 
     #[ORM\Column(type: 'integer')]
-    private $github_id;
+    private $githubId;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $node_id;
+    private $nodeId;
 
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
     #[ORM\Column(type: 'datetimetz_immutable')]
-    private $created_at;
+    private $createdAt;
 
     #[ORM\Column(type: 'datetimetz_immutable', nullable: true)]
-    private $updated_at;
+    private $updatedAt;
 
     public function getId(): ?int
     {
@@ -56,48 +56,48 @@ class GithubColumn
 
     public function getProjectUrl(): ?string
     {
-        return $this->project_url;
+        return $this->projectUrl;
     }
 
-    public function setProjectUrl(string $project_url): self
+    public function setProjectUrl(string $projectUrl): self
     {
-        $this->project_url = $project_url;
+        $this->projectUrl = $projectUrl;
 
         return $this;
     }
 
     public function getCardsUrl(): ?string
     {
-        return $this->cards_url;
+        return $this->cardsUrl;
     }
 
-    public function setCardsUrl(string $cards_url): self
+    public function setCardsUrl(string $cardsUrl): self
     {
-        $this->cards_url = $cards_url;
+        $this->cardsUrl = $cardsUrl;
 
         return $this;
     }
 
     public function getGithubId(): ?int
     {
-        return $this->github_id;
+        return $this->githubId;
     }
 
-    public function setGithubId(int $github_id): self
+    public function setGithubId(int $githubId): self
     {
-        $this->github_id = $github_id;
+        $this->githubId = $githubId;
 
         return $this;
     }
 
     public function getNodeId(): ?string
     {
-        return $this->node_id;
+        return $this->nodeId;
     }
 
-    public function setNodeId(string $node_id): self
+    public function setNodeId(string $nodeId): self
     {
-        $this->node_id = $node_id;
+        $this->nodeId = $nodeId;
 
         return $this;
     }
@@ -116,24 +116,24 @@ class GithubColumn
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
-        $this->created_at = $created_at;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
     public function getUpdatedAt(): ?\DateTimeImmutable
     {
-        return $this->updated_at;
+        return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updated_at): self
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
     {
-        $this->updated_at = $updated_at;
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

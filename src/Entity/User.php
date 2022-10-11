@@ -4,14 +4,50 @@ namespace App\Entity;
 
 use App\Entity\GithubUser;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\SerializedName;
+use Symfony\Component\Validator\Constraints as Assert;
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Doctrine\Orm\Filter\NumericFilter;
+use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[
+    UniqueEntity(
+        fields: ['email'],
+        message: 'There is already an account with this email',
+    ),
+]
+#[ApiResource(security: "is_granted('ROLE_USER')")]
+#[
+    ApiFilter(
+        DateFilter::class,
+        properties: ['createdAt', 'updatedAt' => DateFilter::EXCLUDE_NULL],
+    ),
+]
+#[
+    ApiFilter(
+        SearchFilter::class,
+        properties: [
+            'email' => 'partial',
+            'name' => 'partial',
+            'roles' => 'partial',
+        ],
+    ),
+]
+#[ApiFilter(NumericFilter::class, properties: ['status'])]
+#[ApiFilter(BooleanFilter::class, properties: ['isVerified'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -20,23 +56,51 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     #[ORM\Column(type: 'datetimetz_immutable')]
-    private $created_at;
+    private $createdAt;
 
     #[ORM\Column(type: 'datetimetz_immutable', nullable: true)]
-    private $updated_at;
+    private $updatedAt;
 
-    #[ORM\Column(type: 'smallint', nullable: false, options: ['unsigned' => true, 'default' => 0])]
+    #[
+        ORM\Column(
+            type: 'smallint',
+            nullable: false,
+            options: ['unsigned' => true, 'default' => 0],
+        ),
+    ]
     private $status = 0;
 
+    #[
+        Assert\Email(
+            message: "El correo electrónico '{{ value }}' no es un correo electrónico válido.",
+            mode: 'html5',
+        ),
+    ]
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     private $email;
 
+    #[ApiProperty(security: "is_granted('ROLE_ADMIN')")]
     #[ORM\Column(type: 'json')]
     private $roles = [];
 
     #[ORM\Column(type: 'string')]
     private $password;
 
+    #[
+        Assert\Length(
+            min: 6,
+            max: 4096,
+            minMessage: 'Su contraseña debe tener al menos {{ limit }} caracteres',
+            maxMessage: 'Su contraseña debe tener más de {{ limit }} caracteres',
+        ),
+    ]
+    #[
+        Assert\NotBlank(
+            message: 'La contraseña no puede estar vacía',
+            groups: ['create'],
+        ),
+    ]
+    #[SerializedName('password')]
     private $plainPassword;
 
     #[ORM\Column(type: 'boolean')]
@@ -52,22 +116,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             cascade: ['persist', 'remove'],
         ),
     ]
-    private $github_user;
+    private $githubUser;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $github_pa_token;
+    private $githubPaToken;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $github_username;
+    private $githubUsername;
 
     #[ORM\Column(type: 'string', length: 15, nullable: true)]
-    private $github_usertype;
+    private $githubUsertype;
 
     #[ORM\Column(type: 'json', nullable: true)]
-    private $github_pa_token_scope = [];
+    private $githubPaTokenScope = [];
 
     #[ORM\Column(type: 'datetimetz_immutable', nullable: true)]
-    private $github_pa_token_expiration;
+    private $githubPaTokenExpiration;
+
+    #[
+        ORM\OneToMany(
+            mappedBy: 'user',
+            targetEntity: TimeRecord::class,
+            orphanRemoval: true,
+        ),
+    ]
+    private $timeRecords;
+
+    public function __construct()
+    {
+        $this->timeRecords = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -76,24 +154,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
-        $this->created_at = $created_at;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
     public function getUpdatedAt(): ?\DateTimeImmutable
     {
-        return $this->updated_at;
+        return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updated_at): self
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
     {
-        $this->updated_at = $updated_at;
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
@@ -217,73 +295,103 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getGithubUser(): ?GithubUser
     {
-        return $this->github_user;
+        return $this->githubUser;
     }
 
-    public function setGithubUser(?GithubUser $github_user): self
+    public function setGithubUser(?GithubUser $githubUser): self
     {
-        $this->github_user = $github_user;
+        $this->githubUser = $githubUser;
 
         return $this;
     }
 
     public function getGithubPaToken(): ?string
     {
-        return $this->github_pa_token;
+        return $this->githubPaToken;
     }
 
-    public function setGithubPaToken(?string $github_pa_token): self
+    public function setGithubPaToken(?string $githubPaToken): self
     {
-        $this->github_pa_token = $github_pa_token;
+        $this->githubPaToken = $githubPaToken;
 
         return $this;
     }
 
     public function getGithubUsername(): ?string
     {
-        return $this->github_username;
+        return $this->githubUsername;
     }
 
-    public function setGithubUsername(?string $github_username): self
+    public function setGithubUsername(?string $githubUsername): self
     {
-        $this->github_username = $github_username;
+        $this->githubUsername = $githubUsername;
 
         return $this;
     }
 
     public function getGithubUsertype(): ?string
     {
-        return $this->github_usertype;
+        return $this->githubUsertype;
     }
 
-    public function setGithubUsertype(?string $github_usertype): self
+    public function setGithubUsertype(?string $githubUsertype): self
     {
-        $this->github_usertype = $github_usertype;
+        $this->githubUsertype = $githubUsertype;
 
         return $this;
     }
 
     public function getGithubPaTokenScope(): ?array
     {
-        return $this->github_pa_token_scope;
+        return $this->githubPaTokenScope;
     }
 
-    public function setGithubPaTokenScope(?array $github_pa_token_scope): self
+    public function setGithubPaTokenScope(?array $githubPaTokenScope): self
     {
-        $this->github_pa_token_scope = $github_pa_token_scope;
+        $this->githubPaTokenScope = $githubPaTokenScope;
 
         return $this;
     }
 
     public function getGithubPaTokenExpiration(): ?\DateTimeImmutable
     {
-        return $this->github_pa_token_expiration;
+        return $this->githubPaTokenExpiration;
     }
 
     public function setGithubPaTokenExpiration(
-        ?\DateTimeImmutable $github_pa_token_expiration,
+        ?\DateTimeImmutable $githubPaTokenExpiration,
     ): self {
-        $this->github_pa_token_expiration = $github_pa_token_expiration;
+        $this->githubPaTokenExpiration = $githubPaTokenExpiration;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TimeRecord>
+     */
+    public function getTimeRecords(): Collection
+    {
+        return $this->timeRecords;
+    }
+
+    public function addTimeRecord(TimeRecord $timeRecord): self
+    {
+        if (!$this->timeRecords->contains($timeRecord)) {
+            $this->timeRecords[] = $timeRecord;
+            $timeRecord->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTimeRecord(TimeRecord $timeRecord): self
+    {
+        if ($this->timeRecords->removeElement($timeRecord)) {
+            // set the owning side to null (unless already changed)
+            if ($timeRecord->getUser() === $this) {
+                $timeRecord->setUser(null);
+            }
+        }
 
         return $this;
     }

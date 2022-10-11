@@ -63,11 +63,11 @@ class SynchronizationCrudController extends AbstractCrudController
     {
         return [
             IdField::new('id', 'ID')->hideOnForm(),
-            DateTimeField::new('create_date', 'Fecha de creación')->hideOnForm(),
+            DateTimeField::new('createDate', 'Fecha de creación')->hideOnForm(),
             AssociationField::new('author', 'Creado por')
                 ->hideOnForm()
                 ->autocomplete(),
-            ChoiceField::new('synchronized_entity', 'Entidad')
+            ChoiceField::new('synchronizedEntity', 'Entidad')
                 ->setChoices(
                     fn() => [
                         'Usuario' => GithubUser::class,

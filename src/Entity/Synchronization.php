@@ -14,20 +14,20 @@ class Synchronization
     private $id;
 
     #[ORM\Column(type: 'datetimetz_immutable')]
-    private $created_at;
+    private $createdAt;
 
     #[ORM\Column(type: 'datetimetz_immutable', nullable: true)]
-    private $updated_at;
+    private $updatedAt;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
     private $author;
 
     #[ORM\Column(type: 'string', length: 125)]
-    private $synchronized_entity;
+    private $synchronizedEntity;
 
     #[ORM\Column(type: 'json', nullable: true)]
-    private $synchronized_data = [];
+    private $synchronizedData = [];
 
     public function getId(): ?int
     {
@@ -36,24 +36,24 @@ class Synchronization
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
-        $this->created_at = $created_at;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
     public function getUpdatedAt(): ?\DateTimeImmutable
     {
-        return $this->updated_at;
+        return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updated_at): self
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
     {
-        $this->updated_at = $updated_at;
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
@@ -72,24 +72,24 @@ class Synchronization
 
     public function getSynchronizedEntity(): ?string
     {
-        return $this->synchronized_entity;
+        return $this->synchronizedEntity;
     }
 
-    public function setSynchronizedEntity(string $synchronized_entity): self
+    public function setSynchronizedEntity(string $synchronizedEntity): self
     {
-        $this->synchronized_entity = $synchronized_entity;
+        $this->synchronizedEntity = $synchronizedEntity;
 
         return $this;
     }
 
     public function getSynchronizedData(): ?array
     {
-        return $this->synchronized_data;
+        return $this->synchronizedData;
     }
 
-    public function setSynchronizedData(?array $synchronized_data): self
+    public function setSynchronizedData(?array $synchronizedData): self
     {
-        $this->synchronized_data = $synchronized_data;
+        $this->synchronizedData = $synchronizedData;
 
         return $this;
     }

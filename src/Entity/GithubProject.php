@@ -14,22 +14,22 @@ class GithubProject
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $owner_url;
+    private $ownerUrl;
 
     #[ORM\Column(type: 'string', length: 255)]
     private $url;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $html_url;
+    private $htmlUrl;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $columns_url;
+    private $columnsUrl;
 
     #[ORM\Column(type: 'integer')]
-    private $github_id;
+    private $githubId;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $node_id;
+    private $nodeId;
 
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
@@ -47,13 +47,13 @@ class GithubProject
     private $creator = [];
 
     #[ORM\Column(type: 'datetimetz_immutable')]
-    private $created_at;
+    private $createdAt;
 
     #[ORM\Column(type: 'datetimetz_immutable', nullable: true)]
-    private $updated_at;
+    private $updatedAt;
 
     #[ORM\Column(type: 'string', length: 15)]
-    private $organization_permission;
+    private $organizationPermission;
 
     #[ORM\Column(type: 'boolean')]
     private $private;
@@ -65,12 +65,12 @@ class GithubProject
 
     public function getOwnerUrl(): ?string
     {
-        return $this->owner_url;
+        return $this->ownerUrl;
     }
 
-    public function setOwnerUrl(string $owner_url): self
+    public function setOwnerUrl(string $ownerUrl): self
     {
-        $this->owner_url = $owner_url;
+        $this->ownerUrl = $ownerUrl;
 
         return $this;
     }
@@ -89,48 +89,48 @@ class GithubProject
 
     public function getHtmlUrl(): ?string
     {
-        return $this->html_url;
+        return $this->htmlUrl;
     }
 
-    public function setHtmlUrl(string $html_url): self
+    public function setHtmlUrl(string $htmlUrl): self
     {
-        $this->html_url = $html_url;
+        $this->htmlUrl = $htmlUrl;
 
         return $this;
     }
 
     public function getColumnsUrl(): ?string
     {
-        return $this->columns_url;
+        return $this->columnsUrl;
     }
 
-    public function setColumnsUrl(string $columns_url): self
+    public function setColumnsUrl(string $columnsUrl): self
     {
-        $this->columns_url = $columns_url;
+        $this->columnsUrl = $columnsUrl;
 
         return $this;
     }
 
     public function getGithubId(): ?int
     {
-        return $this->github_id;
+        return $this->githubId;
     }
 
-    public function setGithubId(int $github_id): self
+    public function setGithubId(int $githubId): self
     {
-        $this->github_id = $github_id;
+        $this->githubId = $githubId;
 
         return $this;
     }
 
     public function getNodeId(): ?string
     {
-        return $this->node_id;
+        return $this->nodeId;
     }
 
-    public function setNodeId(string $node_id): self
+    public function setNodeId(string $nodeId): self
     {
-        $this->node_id = $node_id;
+        $this->nodeId = $nodeId;
 
         return $this;
     }
@@ -197,36 +197,36 @@ class GithubProject
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
-        $this->created_at = $created_at;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
     public function getUpdatedAt(): ?\DateTimeImmutable
     {
-        return $this->updated_at;
+        return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updated_at): self
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
     {
-        $this->updated_at = $updated_at;
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
 
     public function getOrganizationPermission(): ?string
     {
-        return $this->organization_permission;
+        return $this->organizationPermission;
     }
 
-    public function setOrganizationPermission(string $organization_permission): self
+    public function setOrganizationPermission(string $organizationPermission): self
     {
-        $this->organization_permission = $organization_permission;
+        $this->organizationPermission = $organizationPermission;
 
         return $this;
     }
